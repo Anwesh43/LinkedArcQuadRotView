@@ -23,6 +23,8 @@ val foreColor : Int = Color.parseColor("#283593")
 val backColor : Int = Color.parseColor("#BDBDBD")
 val rotDeg : Float = 360f / arcs
 val finalDeg : Float = 360f
+val hArcFactor : Float = 3.5f
+val startDeg : Float = 180f
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
@@ -33,3 +35,37 @@ fun Float.mirrorValue(a : Int, b : Int) : Float {
     return (1 - k) * a.inverse() + k * b.inverse()
 }
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+
+fun Canvas.drawArcRot(i : Int, size : Float, deg : Float, paint : Paint) {
+    save()
+    rotate(deg)
+    drawArc(RectF(0f, -size / hArcFactor, size, size / hArcFactor), startDeg, startDeg, false, paint)
+    restore()
+}
+
+fun Canvas.drawAQRNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    paint.style = Paint.Style.STROKE
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.color = foreColor
+    var deg : Float = 0f
+    val sf : Float = 1f - 2 * (i % 2)
+    save()
+    translate(w / 2 + (w / 2 + size) * sc2, gap * (i + 1))
+    rotate(finalDeg * sc2)
+    for (j in 0..(arcs - 1)) {
+        val sc : Float = sc1.divideScale(j, arcs)
+        deg += rotDeg * sc
+        save()
+        rotate(deg)
+        drawArcRot(j, size, deg, paint)
+        restore()
+    }
+    restore()
+}
