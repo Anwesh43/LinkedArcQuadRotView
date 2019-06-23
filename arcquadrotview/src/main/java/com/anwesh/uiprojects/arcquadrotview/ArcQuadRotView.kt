@@ -226,4 +226,13 @@ class ArcQuadRotView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : ArcQuadRotView {
+            val view : ArcQuadRotView = ArcQuadRotView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
