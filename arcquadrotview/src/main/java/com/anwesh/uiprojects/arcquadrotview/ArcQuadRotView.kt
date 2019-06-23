@@ -201,4 +201,26 @@ class ArcQuadRotView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : ArcQuadRotView) {
+
+        private val animator : Animator = Animator(view)
+        private val aqr : ArcQuadRot = ArcQuadRot(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            aqr.draw(canvas, paint)
+            animator.animate {
+                aqr.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            aqr.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
