@@ -14,15 +14,15 @@ import android.content.Context
 import android.app.Activity
 
 val nodes : Int = 5
-val arcs : Int = 2
+val arcs : Int = 5
 val strokeFactor : Int = 90
 val sizeFactor : Float = 2.9f
-val scGap : Float = 2.9f
+val scGap : Float = 0.05f
 val scDiv : Double = 0.51
 val foreColor : Int = Color.parseColor("#283593")
 val backColor : Int = Color.parseColor("#BDBDBD")
 val rotDeg : Float = 360f / arcs
-val finalDeg : Float = 360f
+val finalDeg : Float = 180f
 val hArcFactor : Float = 3.5f
 val startDeg : Float = 180f
 
@@ -57,13 +57,12 @@ fun Canvas.drawAQRNode(i : Int, scale : Float, paint : Paint) {
     var deg : Float = 0f
     val sf : Float = 1f - 2 * (i % 2)
     save()
-    translate(w / 2 + (w / 2 + size) * sc2, gap * (i + 1))
+    translate(w / 2 + (w / 2 + size) * sc2 * sf, gap * (i + 1))
     rotate(finalDeg * sc2)
     for (j in 0..(arcs - 1)) {
         val sc : Float = sc1.divideScale(j, arcs)
         deg += rotDeg * sc
         save()
-        rotate(deg)
         drawArcRot(j, size, deg, paint)
         restore()
     }
